@@ -1,5 +1,4 @@
 import torch
-from torch._C import T
 import torch.nn as nn
 import torchvision
 from sklearn.datasets import load_digits
