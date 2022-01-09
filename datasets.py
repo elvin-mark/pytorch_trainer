@@ -24,9 +24,9 @@ def digits_dataloader(args):
 
 def mnist_dataloader(args):
     train_ds = torchvision.datasets.MNIST(
-        "./", train=True, transform=torchvision.transforms.ToTensor())
+        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
     test_ds = torchvision.datasets.MNIST(
-        "./", train=False, transform=torchvision.transforms.ToTensor())
+        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -49,9 +49,9 @@ def cifar10_dataloader(args):
     ])
 
     train_ds = torchvision.datasets.CIFAR10(
-        "./", train=True, transform=train_transform)
+        "./", train=True, download=True, transform=train_transform)
     test_ds = torchvision.datasets.CIFAR10(
-        "./", train=False, transform=test_transform)
+        "./", train=False, download=True, transform=test_transform)
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -74,9 +74,9 @@ def cifar100_dataloader(args):
     ])
 
     train_ds = torchvision.datasets.CIFAR100(
-        "./", train=True, transform=train_transform)
+        "./", train=True, download=True, transform=train_transform)
     test_ds = torchvision.datasets.CIFAR100(
-        "./", train=False, transform=test_transform)
+        "./", train=False, download=True, transform=test_transform)
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
