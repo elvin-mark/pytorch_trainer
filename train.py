@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
-import torchvision
 
-from parser import create_parser
+from parser import create_train_parser
 from models import create_model
 from datasets import create_dataloader
 from optim import create_optim
 from utils import train
 
-args = create_parser()
+args = create_train_parser()
 
 if args.gpu and torch.cuda.is_available():
     print("Using GPU for training")
@@ -22,9 +21,12 @@ train_dl, test_dl = create_dataloader(args)
 optim = create_optim(args, model)
 crit = nn.CrossEntropyLoss()
 
-print("Starting Training ...")
-train(model, train_dl, test_dl, crit, optim,
-      args.epochs, dev, logging=args.logging)
+print("Start Training ...")
+hist = train(model, train_dl, test_dl, crit, optim,
+             args.epochs, dev, logging=args.logging, csv=args.csv, dashboard=args.dashboard, port=args.port)
+
+if args.csv and hist is not None:
+    hist.to_csv(f"{args.model}_record.csv")
 
 if args.save_model:
     print("Saving model ...")

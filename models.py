@@ -41,7 +41,7 @@ def cifar10_cnn():
         simple_conv_block(16, 32, 3),
         simple_conv_block(32, 64, 3),
         nn.Flatten(),
-        nn.Linear(128, 10)
+        nn.Linear(256, 10)
     )
 
 
@@ -51,7 +51,7 @@ def cifar100_cnn():
         simple_conv_block(16, 32, 3),
         simple_conv_block(32, 64, 3),
         nn.Flatten(),
-        nn.Linear(128, 100)
+        nn.Linear(256, 100)
     )
 
 

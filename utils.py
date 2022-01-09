@@ -2,6 +2,17 @@ import torch
 import torch.nn as nn
 import torchvision
 
+import requests
+import pandas as pd
+
+
+class WebLogger:
+    def __init__(self, port, token):
+        self.url = f"http://localhost:{port}/send_data"
+
+    def send(self, data):
+        requests.post(self.url, json=data)
+
 
 def evaluate(model, test_dl, crit, dev):
     model.eval()
@@ -18,7 +29,7 @@ def evaluate(model, test_dl, crit, dev):
         tot_loss += l.item()
     test_loss = tot_loss / len(test_dl)
     test_acc = 100 * corrects / total
-    return test_loss, test_acc
+    return test_loss, test_acc.item()
 
 
 def train_one_step(model, train_dl, crit, optim, dev):
@@ -39,14 +50,29 @@ def train_one_step(model, train_dl, crit, optim, dev):
         tot_loss += l.item()
     train_loss = tot_loss / len(train_dl)
     train_acc = 100 * corrects / total
-    return train_loss, train_acc
+    return train_loss, train_acc.item()
 
 
-def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True):
+def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=False, dashboard=False, token="", port=None):
+    data_ = []
+    columns = ["epoch", "lr", "train_loss",
+               "train_acc", "test_loss", "test_acc"]
+    if dashboard:
+        web_logger = WebLogger(port, token)
+
     for epoch in range(epochs):
+        lr = optim.param_groups[0]["lr"]
         train_loss, train_acc = train_one_step(
             model, train_dl, crit, optim, dev)
         test_loss, test_acc = evaluate(model, test_dl, crit, dev)
         if logging:
             print(
-                f"train_loss: {train_loss}, train_acc: {train_acc:.2f}%, test_loss: {test_loss}, test_acc: {test_acc:.2f}%")
+                f"epoch: {epoch}, train_loss: {train_loss}, train_acc: {train_acc:.2f}%, test_loss: {test_loss}, test_acc: {test_acc:.2f}%")
+        data_.append([epoch, lr, train_loss, train_acc, test_loss, test_acc])
+
+        if dashboard:
+            web_logger.send({"epoch": epoch, "lr": lr, "train_loss": train_loss,
+                             "train_acc": train_acc, "test_loss": test_loss, "test_acc": test_acc})
+    if csv:
+        df = pd.DataFrame(data_, columns=columns)
+        return df
