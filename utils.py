@@ -4,6 +4,8 @@ import torchvision
 
 import requests
 import pandas as pd
+from sklearn.decomposition import PCA
+import numpy as np
 
 
 class WebLogger:
@@ -53,7 +55,7 @@ def train_one_step(model, train_dl, crit, optim, dev):
     return train_loss, train_acc.item()
 
 
-def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=False, dashboard=False, token="", port=None):
+def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=False, dashboard=False, token="", port=None, checkpoint=0):
     data_ = []
     columns = ["epoch", "lr", "train_loss",
                "train_acc", "test_loss", "test_acc"]
@@ -73,6 +75,44 @@ def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=
         if dashboard:
             web_logger.send({"epoch": epoch, "lr": lr, "train_loss": train_loss,
                              "train_acc": train_acc, "test_loss": test_loss, "test_acc": test_acc})
+
+        if checkpoint > 0 and (epoch) % checkpoint == 0:
+            torch.save(model.state_dict(),
+                       f"checkpoints/checkpoint_epoch_{epoch}.ckpt")
     if csv:
         df = pd.DataFrame(data_, columns=columns)
         return df
+
+
+def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
+    w = [[] for _ in base_model]
+    base_parameters = [param.detach().clone().reshape(-1)
+                       for param in base_model.parameters()]
+
+    for model_path in list_models:
+        tmp = torch.load(model_path)
+        for i, k in enumerate(tmp):
+            w[i].append(tmp[k].detach().clone().numpy().reshape(-1))
+    w1 = []
+    w2 = []
+    for w_ in w:
+        pca = PCA(n_components=2)
+        pca.fit(w_)
+        w1.append(torch.from_numpy(pca.components_[0]).float())
+        w2.append(torch.from_numpy(pca.components_[1]).float())
+
+    x_ = np.linspace(*xrange, N)
+    y_ = np.linspace(*yrange, N)
+
+    X, Y = np.meshgrid(x_, y_)
+
+    Z = []
+    for x, y in zip(X.reshape(-1), Y.reshape(-1)):
+        for i, param in enumerate(base_model.parameters()):
+            w_ = base_parameters[i] + x * w1[i] + y * w2[i]
+            param.data = w_.reshape(param.shape)
+        loss, acc = evaluate(base_model, test_dl, crit, dev)
+        Z.append(loss)
+
+    Z = np.array(Z).reshape(X.shape)
+    return X, Y, Z
