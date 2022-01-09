@@ -29,8 +29,9 @@ list_models = [os.path.join(args.checkpoints_dir, elem)
 X, Y, Z = landscape(base_model, list_models, test_dl, crit,
                     args.xrange, args.yrange, args.N, dev)
 
-print(X, Y, Z)
-
 fig, ax = plt.subplots(1, 1, subplot_kw={"projection": "3d"})
 ax.plot_surface(X, Y, Z)
+ax.set_xlabel("X")
+ax.set_ylabel("Y")
+ax.set_zlabel("Loss")
 plt.show()
