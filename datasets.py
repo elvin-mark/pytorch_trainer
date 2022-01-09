@@ -1,4 +1,5 @@
 import torch
+from torch._C import T
 import torch.nn as nn
 import torchvision
 from sklearn.datasets import load_digits
@@ -33,10 +34,64 @@ def mnist_dataloader(args):
     return train_dl, test_dl
 
 
+def cifar10_dataloader(args):
+    train_transform = torchvision.transforms.Compose([
+        torchvision.transforms.RandomHorizontalFlip(),
+        torchvision.transforms.RandomRotation(15),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+
+    test_transform = torchvision.transforms.Compose([
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+
+    train_ds = torchvision.datasets.CIFAR10(
+        "./", train=True, transform=train_transform)
+    test_ds = torchvision.datasets.CIFAR10(
+        "./", train=False, transform=test_transform)
+    train_dl = torch.utils.data.DataLoader(
+        train_ds, batch_size=args.batch_size)
+    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+    return train_dl, test_dl
+
+
+def cifar100_dataloader(args):
+    train_transform = torchvision.transforms.Compose([
+        torchvision.transforms.RandomHorizontalFlip(),
+        torchvision.transforms.RandomRotation(15),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+
+    test_transform = torchvision.transforms.Compose([
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+
+    train_ds = torchvision.datasets.CIFAR100(
+        "./", train=True, transform=train_transform)
+    test_ds = torchvision.datasets.CIFAR100(
+        "./", train=False, transform=test_transform)
+    train_dl = torch.utils.data.DataLoader(
+        train_ds, batch_size=args.batch_size)
+    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+    return train_dl, test_dl
+
+
 def create_dataloader(args):
     if args.dataset == "digits":
         return digits_dataloader(args)
     elif args.dataset == "mnist":
         return mnist_dataloader(args)
+    elif args.dataset == "cifar10":
+        return cifar10_dataloader(args)
+    elif args.dataset == "cifar100":
+        return cifar10_dataloader(args)
     else:
         return None

@@ -35,10 +35,34 @@ def mnist_cnn():
     )
 
 
+def cifar10_cnn():
+    return nn.Sequential(
+        simple_conv_block(3, 16, 3),
+        simple_conv_block(16, 32, 3),
+        simple_conv_block(32, 64, 3),
+        nn.Flatten(),
+        nn.Linear(128, 10)
+    )
+
+
+def cifar100_cnn():
+    return nn.Sequential(
+        simple_conv_block(3, 16, 3),
+        simple_conv_block(16, 32, 3),
+        simple_conv_block(32, 64, 3),
+        nn.Flatten(),
+        nn.Linear(128, 100)
+    )
+
+
 def create_model(args):
     if args.model == "digits_cnn":
         return digits_cnn()
     elif args.model == "mnist_cnn":
         return mnist_cnn()
+    elif args.model == "cifar10_cnn":
+        return cifar10_cnn()
+    elif args.model == "cifar100_cnn":
+        return cifar100_cnn()
     else:
         return None
