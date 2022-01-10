@@ -29,5 +29,23 @@ def handle_data():
     return "received!"
 
 
+@app.route("/send_samples", methods=["POST"])
+def handle_samples():
+    if request.method == "POST":
+        data = request.get_json()
+        with app.test_request_context("/"):
+            emit("samples", data, namespace="/", room=sid)
+    return "received!"
+
+
+@app.route("/send_landscape", methods=["POST"])
+def handle_landscape():
+    if request.method == "POST":
+        data = request.get_json()
+        with app.test_request_context("/"):
+            emit("landscape", data, namespace="/", room=sid)
+    return "received!"
+
+
 if __name__ == "__main__":
     socketio.run(app)

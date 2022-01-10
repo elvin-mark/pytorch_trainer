@@ -4,6 +4,24 @@ import torchvision
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 
+EXTRA_INFO_DIGITS = {"labels": [
+    str(i) for i in range(10)], "image_shape": (1, 8, 8)}
+
+EXTRA_INFO_MNIST = {"labels": [
+    str(i) for i in range(10)], "image_shape": (1, 28, 28)}
+
+EXTRA_INFO_KMNIST = {"labels": [
+    str(i) for i in range(10)], "image_shape": (1, 28, 28)}
+
+EXTRA_INFO_FASHION_MNIST = {"labels": [
+    str(i) for i in range(10)], "image_shape": (1, 28, 28)}
+
+EXTRA_INFO_CIFAR10 = {"labels": [
+    str(i) for i in range(10)], "image_shape": (3, 32, 32)}
+
+EXTRA_INFO_CIFAR100 = {"labels": [
+    str(i) for i in range(10)], "image_shape": (3, 32, 32)}
+
 
 def digits_dataloader(args):
     data_ = load_digits()
@@ -19,7 +37,8 @@ def digits_dataloader(args):
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
-    return train_dl, test_dl
+
+    return train_dl, test_dl, EXTRA_INFO_DIGITS
 
 
 def mnist_dataloader(args):
@@ -30,7 +49,29 @@ def mnist_dataloader(args):
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
-    return train_dl, test_dl
+    return train_dl, test_dl, EXTRA_INFO_MNIST
+
+
+def kmnist_dataloader(args):
+    train_ds = torchvision.datasets.KMNIST(
+        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
+    test_ds = torchvision.datasets.KMNIST(
+        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
+    train_dl = torch.utils.data.DataLoader(
+        train_ds, batch_size=args.batch_size)
+    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+    return train_dl, test_dl, EXTRA_INFO_KMNIST
+
+
+def fashion_mnist_dataloader(args):
+    train_ds = torchvision.datasets.FashionMNIST(
+        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
+    test_ds = torchvision.datasets.FashionMNIST(
+        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
+    train_dl = torch.utils.data.DataLoader(
+        train_ds, batch_size=args.batch_size)
+    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+    return train_dl, test_dl, EXTRA_INFO_FASHION_MNIST
 
 
 def cifar10_dataloader(args):
@@ -55,7 +96,7 @@ def cifar10_dataloader(args):
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
-    return train_dl, test_dl
+    return train_dl, test_dl, EXTRA_INFO_CIFAR10
 
 
 def cifar100_dataloader(args):
@@ -80,7 +121,7 @@ def cifar100_dataloader(args):
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
-    return train_dl, test_dl
+    return train_dl, test_dl, EXTRA_INFO_CIFAR100
 
 
 def create_dataloader(args):
@@ -88,6 +129,10 @@ def create_dataloader(args):
         return digits_dataloader(args)
     elif args.dataset == "mnist":
         return mnist_dataloader(args)
+    elif args.dataset == "kmnist":
+        return kmnist_dataloader(args)
+    elif args.dataset == "fashion_mnist":
+        return fashion_mnist_dataloader(args)
     elif args.dataset == "cifar10":
         return cifar10_dataloader(args)
     elif args.dataset == "cifar100":

@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
-AVAILABLE_DATASETS = ["digits", "mnist", "cifar10", "cifar100"]
+AVAILABLE_DATASETS = ["digits", "mnist", "kmnist",
+                      "fashion_mnist", "cifar10", "cifar100"]
 AVAILABLE_MODELS = ["digits_cnn", "mnist_cnn", "cifar10_cnn", "cifar100_cnn"]
 
 
@@ -34,9 +35,13 @@ def create_train_parser():
                         help="Port of the dashboard server")
     parser.add_argument("--checkpoint", type=int, default=0,
                         help="Checkpoint frequency")
+    parser.add_argument("--landscape", action="store_true",
+                        help="Show loss landscape in the dashboard", dest="landscape")
+    parser.add_argument("--samples", action="store_true",
+                        help="show some sample images in the dashboard", dest="samples")
 
     parser.set_defaults(gpu=False, logging=True,
-                        save_model=False, csv=False, dashboard=False)
+                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False)
 
     args = parser.parse_args()
     return args

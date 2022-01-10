@@ -13,6 +13,12 @@ function NavTabs() {
           to="/samples"
           component={Link}
         ></Tab>
+        <Tab
+          label="Landscape"
+          value="/Landscape"
+          to="/Landscape"
+          component={Link}
+        ></Tab>
       </Tabs>
     </div>
   );

@@ -8,8 +8,7 @@ function Sample({ img, data }) {
       <table>
         <tr>
           <td>
-            {/* <img src={img}></img> */}
-            Image
+            <img src={img}></img>
           </td>
           <td>
             <BarChart width={500} height={400} data={data} layout="vertical">

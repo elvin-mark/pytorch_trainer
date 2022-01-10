@@ -17,7 +17,7 @@ else:
 
 model = create_model(args).to(dev)
 model.load_state_dict(torch.load(args.model_path, map_location=dev))
-train_dl, test_dl = create_dataloader(args)
+train_dl, test_dl, extra_info = create_dataloader(args)
 crit = nn.CrossEntropyLoss()
 
 print("Start Testing ...")
