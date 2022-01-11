@@ -46,7 +46,7 @@ def test_images(model, test_dl, labels, image_shape, dev, N=5, top=5):
             else:
                 assert("Invalid Image Shape")
                 img = None
-            img = Image.fromarray(img)
+            img = Image.fromarray(img).convert("RGB")
             img = img.resize((200, 200))
             img_mem = io.BytesIO()
             img.save(img_mem, format="PNG")
@@ -142,6 +142,7 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
             if "running" in k or "num_batches_tracked" in k:
                 continue
             w[i].append(tmp[k].detach().clone().cpu().numpy().reshape(-1))
+            i += 1
     w1 = []
     w2 = []
     for w_ in w:
