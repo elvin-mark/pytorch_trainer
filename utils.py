@@ -137,7 +137,10 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
 
     for model_path in list_models:
         tmp = torch.load(model_path)
-        for i, k in enumerate(tmp):
+        i = 0
+        for k in tmp:
+            if "running" in k or "num_batches_tracked" in k:
+                continue
             w[i].append(tmp[k].detach().clone().cpu().numpy().reshape(-1))
     w1 = []
     w2 = []
