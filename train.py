@@ -76,8 +76,22 @@ if args.landscape:
     img.save(img_mem, format="PNG")
     img_mem.seek(0)
     img_bytes = img_mem.read()
-    img = base64.b64encode(img_bytes).decode()
-    results = {"img": "data:image/png;base64, " + img}
+    img_surf = "data:image/png;base64, " + base64.b64encode(img_bytes).decode()
+
+    fig = plt.figure(2)
+    plt.contour(X, Y, Z)
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    fig.canvas.draw()
+    img = Image.frombytes("RGB", fig.canvas.get_width_height(),
+                          fig.canvas.tostring_rgb())
+    img_mem = io.BytesIO()
+    img.save(img_mem, format="PNG")
+    img_mem.seek(0)
+    img_bytes = img_mem.read()
+    img_contour = "data:image/png;base64, " + \
+        base64.b64encode(img_bytes).decode()
+    results = {"surf": img_surf, "contour": img_contour}
 
     if web_logger is not None:
         web_logger.send_landscape(results)

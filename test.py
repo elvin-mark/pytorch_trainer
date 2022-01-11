@@ -80,7 +80,7 @@ if args.landscape:
     img_bytes = img_mem.read()
     img_contour = "data:image/png;base64, " + \
         base64.b64encode(img_bytes).decode()
-    results = {"img": img_surf, "contour": img_contour}
+    results = {"surf": img_surf, "contour": img_contour}
 
     if web_logger is not None:
         web_logger.send_landscape(results)

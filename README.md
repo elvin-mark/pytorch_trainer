@@ -8,6 +8,9 @@ Running the server in case you are using the dashboard
 python server.py
 ```
 ![dashboard](samples/dashboard.png?raw=true "Dashboard")
+![samples](samples/samples.png?raw=true "Samples")
+![landscape](samples/loss_landscape.png?raw=true "Landscape")
+
 
 Run this line to start training
 ```
@@ -24,7 +27,10 @@ python train.py \
   --save-model \
   --csv \     
   --dashboard \       
-  --port PORT 
+  --port PORT \
+  --url URL \
+  --landscape \
+  --samples 
 ```
 
 For more information about this script
@@ -40,7 +46,12 @@ python test.py \
   --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn} \
   --batch-size BATCH_SIZE \
   --gpu \ 
-  --model-path MODEL_PATH
+  --model-path MODEL_PATH \
+  --dashboard \
+  --port PORT
+  --url URL\
+  --landscape \
+  --samples 
 ```
 
 Run this line for more information 

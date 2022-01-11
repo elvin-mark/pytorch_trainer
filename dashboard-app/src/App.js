@@ -44,7 +44,12 @@ function App() {
             ></Route>
             <Route
               path="/landscape"
-              element={<Landscape img={landscape.img}></Landscape>}
+              element={
+                <Landscape
+                  surf={landscape.surf}
+                  contour={landscape.contour}
+                ></Landscape>
+              }
             ></Route>
           </Routes>
         </Box>
