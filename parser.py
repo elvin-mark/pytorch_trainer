@@ -62,8 +62,18 @@ def create_test_parser():
     parser.add_argument("--gpu", action="store_true", help="Train using GPU")
     parser.add_argument("--model-path", type=str, default="",
                         help="Path to the saved model")
+    parser.add_argument("--landscape", action="store_true",
+                        help="Show loss landscape in the dashboard", dest="landscape")
+    parser.add_argument("--samples", action="store_true",
+                        help="show some sample images in the dashboard", dest="samples")
+    parser.add_argument("--url", type=str, default=None,
+                        help="Specify a customize URL for the dashboard")
+    parser.add_argument("--dashboard", action="store_true",
+                        help="Visualize training process in a dashboard")
+    parser.add_argument("--port", type=int, default=5000,
+                        help="Port of the dashboard server")
 
-    parser.set_defaults(gpu=False)
+    parser.set_defaults(gpu=False, landscape=False, samples=False)
     args = parser.parse_args()
     return args
 

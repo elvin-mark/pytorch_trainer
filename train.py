@@ -29,7 +29,7 @@ else:
     print("Using CPU for training. It can be a little bit slow")
 
 model = create_model(args).to(dev)
-train_dl, test_dl, extra_info = create_dataloader(args)
+train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(args)
 optim = create_optim(args, model)
 crit = nn.CrossEntropyLoss()
 
@@ -53,7 +53,7 @@ if args.save_model:
 if args.samples:
     print("Generating Sample Images Test")
     results = test_images(
-        model, test_dl, extra_info["labels"], extra_info["image_shape"], dev)
+        model, test_ds, raw_test_ds, extra_info["labels"], extra_info["image_shape"], dev)
     if web_logger is not None:
         web_logger.send_samples(results)
 

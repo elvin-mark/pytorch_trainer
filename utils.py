@@ -28,39 +28,36 @@ class WebLogger:
         requests.post(self.base_url + "send_landscape", json=data)
 
 
-def test_images(model, test_dl, labels, image_shape, dev, N=5, top=5):
+def test_images(model, test_ds, raw_test_ds, labels, image_shape, dev, N=5, top=5):
     model.eval()
     softmax = nn.Softmax(dim=1)
     samples = []
-    count = 0
-    for x, y in test_dl:
-        for x_ in x:
-            if count == N:
-                break
-            if image_shape[0] == 3:
-                img = np.round(255 * x_.detach().clone().numpy().reshape(
-                    image_shape).transpose(1, 2, 0)).astype("uint8")
-            elif image_shape[0] == 1:
-                img = np.round(255*x_.detach().clone().numpy().reshape(
-                    image_shape[1:])).astype("uint8")
-            else:
-                assert("Invalid Image Shape")
-                img = None
-            img = Image.fromarray(img).convert("RGB")
-            img = img.resize((200, 200))
-            img_mem = io.BytesIO()
-            img.save(img_mem, format="PNG")
-            img_mem.seek(0)
-            img_bytes = img_mem.read()
-            img = "data:image/png;base64, " + \
-                base64.b64encode(img_bytes).decode()
-            x_ = x_.view(1, *image_shape).to(dev)
-            o = softmax(model(x_))
-            idxs = torch.argsort(o[0], descending=True).cpu()[:top]
-            prob = [{"class": labels[i], "prob":o[0][i].item() * 100}
-                    for i in idxs]
-            samples.append({"img": img, "data": prob})
-            count += 1
+    for i, ((x, y), (x_raw, y_raw)) in enumerate(zip(test_ds, raw_test_ds)):
+        if i == N:
+            break
+        if image_shape[0] == 3:
+            img = np.round(255 * x_raw.detach().clone().numpy().reshape(
+                image_shape).transpose(1, 2, 0)).astype("uint8")
+        elif image_shape[0] == 1:
+            img = np.round(255*x_raw.detach().clone().numpy().reshape(
+                image_shape[1:])).astype("uint8")
+        else:
+            assert("Invalid Image Shape")
+            img = None
+        img = Image.fromarray(img)
+        img = img.resize((200, 200))
+        img_mem = io.BytesIO()
+        img.save(img_mem, format="PNG")
+        img_mem.seek(0)
+        img_bytes = img_mem.read()
+        img = "data:image/png;base64, " + \
+            base64.b64encode(img_bytes).decode()
+        x_ = x.view(1, *image_shape).to(dev)
+        o = softmax(model(x_))
+        idxs = torch.argsort(o[0], descending=True).cpu()[:top]
+        prob = [{"class": labels[i], "prob":o[0][i].item() * 100}
+                for i in idxs]
+        samples.append({"img": img, "data": prob})
     return {"samples": samples}
 
 

@@ -20,7 +20,7 @@ else:
 base_model = create_model(args).to(dev)
 base_model.load_state_dict(torch.load(args.base_model, map_location=dev))
 
-_, test_dl, _ = create_dataloader(args)
+_, test_dl, _, _, _ = create_dataloader(args)
 crit = nn.CrossEntropyLoss()
 
 list_models = [os.path.join(args.checkpoints_dir, elem)
