@@ -2,7 +2,8 @@ from argparse import ArgumentParser
 
 AVAILABLE_DATASETS = ["digits", "mnist", "kmnist",
                       "fashion_mnist", "cifar10", "cifar100"]
-AVAILABLE_MODELS = ["digits_cnn", "mnist_cnn", "cifar10_cnn", "cifar100_cnn"]
+AVAILABLE_MODELS = ["digits_cnn", "digits_resnet",
+                    "mnist_cnn", "mnist_resnet", "cifar10_cnn", "cifar10_resnet", "cifar100_cnn"]
 
 
 def create_train_parser():

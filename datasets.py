@@ -148,6 +148,6 @@ def create_dataloader(args):
     elif args.dataset == "cifar10":
         return cifar10_dataloader(args)
     elif args.dataset == "cifar100":
-        return cifar10_dataloader(args)
+        return cifar100_dataloader(args)
     else:
         return None
