@@ -36,7 +36,7 @@ crit = nn.CrossEntropyLoss()
 web_logger = None
 if args.dashboard:
     print("Preparing Dashboard Logger")
-    web_logger = WebLogger(args.port, "")
+    web_logger = WebLogger(args.port, customize_url=args.url)
 
 print("Start Training ...")
 hist = train(model, train_dl, test_dl, crit, optim,

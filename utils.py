@@ -12,8 +12,11 @@ import base64
 
 
 class WebLogger:
-    def __init__(self, port, token):
-        self.base_url = f"http://localhost:{port}/"
+    def __init__(self, port, customize_url=None):
+        if customize_url:
+            self.base_url = customize_url
+        else:
+            self.base_url = f"http://localhost:{port}/"
 
     def send_data(self, data):
         requests.post(self.base_url + "send_data", json=data)
@@ -128,7 +131,7 @@ def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=
 
 
 def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
-    w = [[] for _ in base_model]
+    w = [[] for _ in base_model.parameters()]
     base_parameters = [param.detach().clone().reshape(-1)
                        for param in base_model.parameters()]
 

@@ -11,16 +11,18 @@ EXTRA_INFO_MNIST = {"labels": [
     str(i) for i in range(10)], "image_shape": (1, 28, 28)}
 
 EXTRA_INFO_KMNIST = {"labels": [
-    str(i) for i in range(10)], "image_shape": (1, 28, 28)}
+    "お", "き", "す", "つ", "な", "は", "ま", "や", "れ", "を"], "image_shape": (1, 28, 28)}
 
 EXTRA_INFO_FASHION_MNIST = {"labels": [
-    str(i) for i in range(10)], "image_shape": (1, 28, 28)}
+    "T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"], "image_shape": (1, 28, 28)}
 
 EXTRA_INFO_CIFAR10 = {"labels": [
-    str(i) for i in range(10)], "image_shape": (3, 32, 32)}
+    "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"], "image_shape": (3, 32, 32)}
 
 EXTRA_INFO_CIFAR100 = {"labels": [
     str(i) for i in range(10)], "image_shape": (3, 32, 32)}
+
+ROOT_DIR = "./data/"
 
 
 def digits_dataloader(args):
@@ -43,9 +45,9 @@ def digits_dataloader(args):
 
 def mnist_dataloader(args):
     train_ds = torchvision.datasets.MNIST(
-        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=True, download=True, transform=torchvision.transforms.ToTensor())
     test_ds = torchvision.datasets.MNIST(
-        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=False, download=True, transform=torchvision.transforms.ToTensor())
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -54,9 +56,9 @@ def mnist_dataloader(args):
 
 def kmnist_dataloader(args):
     train_ds = torchvision.datasets.KMNIST(
-        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=True, download=True, transform=torchvision.transforms.ToTensor())
     test_ds = torchvision.datasets.KMNIST(
-        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=False, download=True, transform=torchvision.transforms.ToTensor())
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -65,9 +67,9 @@ def kmnist_dataloader(args):
 
 def fashion_mnist_dataloader(args):
     train_ds = torchvision.datasets.FashionMNIST(
-        "./", train=True, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=True, download=True, transform=torchvision.transforms.ToTensor())
     test_ds = torchvision.datasets.FashionMNIST(
-        "./", train=False, download=True, transform=torchvision.transforms.ToTensor())
+        ROOT_DIR, train=False, download=True, transform=torchvision.transforms.ToTensor())
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -90,9 +92,9 @@ def cifar10_dataloader(args):
     ])
 
     train_ds = torchvision.datasets.CIFAR10(
-        "./", train=True, download=True, transform=train_transform)
+        ROOT_DIR, train=True, download=True, transform=train_transform)
     test_ds = torchvision.datasets.CIFAR10(
-        "./", train=False, download=True, transform=test_transform)
+        ROOT_DIR, train=False, download=True, transform=test_transform)
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
@@ -115,9 +117,9 @@ def cifar100_dataloader(args):
     ])
 
     train_ds = torchvision.datasets.CIFAR100(
-        "./", train=True, download=True, transform=train_transform)
+        ROOT_DIR, train=True, download=True, transform=train_transform)
     test_ds = torchvision.datasets.CIFAR100(
-        "./", train=False, download=True, transform=test_transform)
+        ROOT_DIR, train=False, download=True, transform=test_transform)
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size)
     test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
