@@ -12,7 +12,12 @@ In the dashboard you can see the evolution of the training of your network, pred
 ![dashboard](samples/dashboard.png?raw=true "Dashboard")
 ![samples](samples/samples.png?raw=true "Samples")
 ![landscape](samples/loss_landscape.png?raw=true "Landscape")
+![contour](samples/contour.png?raw=true "Contour")
 
+You can also use the following command line using ngrok if you want your dashboard to be available outside your local network. (If you want to use it from google colab for example)
+```
+ngrok http PORT
+```
 
 Run this line to start training
 ```
