@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
+import pickle
 
 EXTRA_INFO_DIGITS = {"labels": [
     str(i) for i in range(10)], "image_shape": (1, 8, 8)}
@@ -19,8 +20,9 @@ EXTRA_INFO_FASHION_MNIST = {"labels": [
 EXTRA_INFO_CIFAR10 = {"labels": [
     "airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"], "image_shape": (3, 32, 32)}
 
-EXTRA_INFO_CIFAR100 = {"labels": [
-    str(i) for i in range(10)], "image_shape": (3, 32, 32)}
+with open("./extra/cifar100_labels.pkl", "rb") as f:
+    EXTRA_INFO_CIFAR100 = {"labels": pickle.load(
+        f), "image_shape": (3, 32, 32)}
 
 ROOT_DIR = "./data/"
 

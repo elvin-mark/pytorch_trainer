@@ -62,8 +62,8 @@ if args.landscape:
     list_models = [os.path.join("./checkpoints", elem)
                    for elem in os.listdir("./checkpoints")]
 
-    X, Y, Z = landscape(model, list_models, test_dl, crit,
-                        [-5, 5], [-5, 5], 10, dev)
+    X, Y, Z, proj_checkpoints = landscape(model, list_models, test_dl, crit,
+                                          [-5, 5], [-5, 5], 10, dev)
     fig, ax = plt.subplots(1, 1, subplot_kw={"projection": "3d"})
     ax.plot_surface(X, Y, Z)
     ax.set_xlabel("X")
@@ -79,9 +79,10 @@ if args.landscape:
     img_surf = "data:image/png;base64, " + base64.b64encode(img_bytes).decode()
 
     fig = plt.figure(2)
-    plt.contour(X, Y, Z)
+    plt.contour(X, Y, Z, levels=50)
     plt.xlabel("X")
     plt.ylabel("Y")
+    plt.scatter(proj_checkpoints[:, 0], proj_checkpoints[:, 1])
     fig.canvas.draw()
     img = Image.frombytes("RGB", fig.canvas.get_width_height(),
                           fig.canvas.tostring_rgb())

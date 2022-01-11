@@ -148,6 +148,30 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
         w1.append(torch.from_numpy(pca.components_[0]).float().to(dev))
         w2.append(torch.from_numpy(pca.components_[1]).float().to(dev))
 
+    ###########################################################
+    proj_checkpoints = []
+
+    for model_path in list_models:
+        tmp = torch.load(model_path)
+        i = 0
+        acc_proj1 = 0
+        acc_norm1 = 0
+        acc_proj2 = 0
+        acc_norm2 = 0
+
+        for k in tmp:
+            if "running" in k or "num_batches_tracked" in k:
+                continue
+            acc_proj1 += w1[i].dot(tmp[k].reshape(-1) - base_parameters[i])
+            acc_norm1 += w1[i].dot(w1[i])
+            acc_proj2 += w2[i].dot(tmp[k].reshape(-1) - base_parameters[i])
+            acc_norm2 += w2[i].dot(w2[i])
+            i += 1
+        proj_checkpoints.append(
+            [acc_proj1 / acc_norm1 ** 0.5, acc_proj2 / acc_norm2 ** 0.5])
+    proj_checkpoints = np.array(proj_checkpoints)
+    ###########################################################
+
     x_ = np.linspace(*xrange, N)
     y_ = np.linspace(*yrange, N)
 
@@ -162,4 +186,4 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
         Z.append(loss)
 
     Z = np.array(Z).reshape(X.shape)
-    return X, Y, Z
+    return X, Y, Z, proj_checkpoints

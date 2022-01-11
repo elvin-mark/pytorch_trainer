@@ -7,6 +7,8 @@ Running the server in case you are using the dashboard
 ```
 python server.py
 ```
+In the dashboard you can see the evolution of the training of your network, predictions on some samples images, the loss landscape around the optimal parameters found in the training.
+
 ![dashboard](samples/dashboard.png?raw=true "Dashboard")
 ![samples](samples/samples.png?raw=true "Samples")
 ![landscape](samples/loss_landscape.png?raw=true "Landscape")
