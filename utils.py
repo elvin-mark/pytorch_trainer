@@ -138,14 +138,14 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
     for model_path in list_models:
         tmp = torch.load(model_path)
         for i, k in enumerate(tmp):
-            w[i].append(tmp[k].detach().clone().numpy().reshape(-1))
+            w[i].append(tmp[k].detach().clone().cpu().numpy().reshape(-1))
     w1 = []
     w2 = []
     for w_ in w:
         pca = PCA(n_components=2)
         pca.fit(w_)
-        w1.append(torch.from_numpy(pca.components_[0]).float())
-        w2.append(torch.from_numpy(pca.components_[1]).float())
+        w1.append(torch.from_numpy(pca.components_[0]).float().to(dev))
+        w2.append(torch.from_numpy(pca.components_[1]).float().to(dev))
 
     x_ = np.linspace(*xrange, N)
     y_ = np.linspace(*yrange, N)
