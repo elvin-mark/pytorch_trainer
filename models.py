@@ -117,6 +117,25 @@ def cifar100_cnn():
     )
 
 
+def simple_general_cnn(num_classes):
+    return nn.Sequential(
+        simple_conv_block(3, 32, 3),
+        nn.MaxPool2d(kernel_size=2),
+        simple_conv_block(32, 32, 3),
+        nn.MaxPool2d(kernel_size=2),
+        simple_conv_block(32, 64, 3),
+        nn.MaxPool2d(kernel_size=2),
+        simple_conv_block(64, 64, 3),
+        nn.MaxPool2d(kernel_size=2),
+        simple_conv_block(64, 128, 3),
+        nn.MaxPool2d(kernel_size=2),
+        simple_conv_block(128, 128, 3),
+        nn.AdaptiveAvgPool2d(1),
+        nn.Flatten(),
+        nn.Linear(128, num_classes)
+    )
+
+
 def create_model(args):
     if args.model == "digits_cnn":
         return digits_cnn()
@@ -132,5 +151,9 @@ def create_model(args):
         return cifar10_resnet()
     elif args.model == "cifar100_cnn":
         return cifar100_cnn()
+    elif args.model == "simple_general_cnn":
+        if args.num_classes is None:
+            assert("No number of classes specified. Could not create model")
+        return simple_general_cnn(args.num_classes)
     else:
         return None

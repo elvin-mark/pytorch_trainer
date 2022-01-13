@@ -4,6 +4,7 @@ import torchvision
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 import pickle
+import os
 
 EXTRA_INFO_DIGITS = {"labels": [
     str(i) for i in range(10)], "image_shape": (1, 8, 8)}
@@ -136,6 +137,45 @@ def cifar100_dataloader(args):
     return train_dl, test_dl,  test_ds, raw_test_ds, EXTRA_INFO_CIFAR100
 
 
+def image_folder_dataloader(args):
+    if args.root is None:
+        assert("No Root Folder specified")
+    train_transform = torchvision.transforms.Compose([
+        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.RandomHorizontalFlip(),
+        torchvision.transforms.RandomRotation(15),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+
+    test_transform = torchvision.transforms.Compose([
+        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
+    raw_test_transform = torchvision.transforms.Compose([
+        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.ToTensor()
+    ])
+
+    train_path = os.path.join(args.root, "train")
+    test_path = os.path.join(args.root, "test")
+    train_ds = torchvision.datasets.ImageFolder(
+        train_path, transform=train_transform)
+    test_ds = torchvision.datasets.ImageFolder(
+        test_path, transform=test_transform)
+    raw_test_ds = torchvision.datasets.ImageFolder(
+        test_path, transform=raw_test_transform)
+    train_dl = torch.utils.data.DataLoader(
+        train_ds, batch_size=args.batch_size)
+    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+
+    extra_info = {"labels": train_ds.classes, "image_shape": (3, 224, 224)}
+    return train_dl, test_dl,  test_ds, raw_test_ds, extra_info
+
+
 def create_dataloader(args):
     if args.dataset == "digits":
         return digits_dataloader(args)
@@ -149,5 +189,7 @@ def create_dataloader(args):
         return cifar10_dataloader(args)
     elif args.dataset == "cifar100":
         return cifar100_dataloader(args)
+    elif args.dataset == "image_folder":
+        return image_folder_dataloader(args)
     else:
         return None

@@ -1,9 +1,9 @@
 from argparse import ArgumentParser
 
 AVAILABLE_DATASETS = ["digits", "mnist", "kmnist",
-                      "fashion_mnist", "cifar10", "cifar100"]
+                      "fashion_mnist", "cifar10", "cifar100", "image_folder"]
 AVAILABLE_MODELS = ["digits_cnn", "digits_resnet",
-                    "mnist_cnn", "mnist_resnet", "cifar10_cnn", "cifar10_resnet", "cifar100_cnn"]
+                    "mnist_cnn", "mnist_resnet", "cifar10_cnn", "cifar10_resnet", "cifar100_cnn", "simple_general_cnn"]
 
 
 def create_train_parser():
@@ -12,6 +12,10 @@ def create_train_parser():
 
     parser.add_argument("--dataset", type=str,
                         default="digits", choices=AVAILABLE_DATASETS, help="Dataset to be used")
+    parser.add_argument("--root", type=str, default=None,
+                        help="Root folder for images")
+    parser.add_argument("--num-classes", type=int,
+                        default=None, help="Number of classes")
     parser.add_argument("--model", type=str, default="digits_cnn", choices=AVAILABLE_MODELS,
                         help="Model to be trained")
     parser.add_argument("--batch-size", type=int, default=32,
@@ -56,6 +60,10 @@ def create_test_parser():
 
     parser.add_argument("--dataset", type=str,
                         default="digits", choices=AVAILABLE_DATASETS, help="Dataset to be used")
+    parser.add_argument("--root", type=str, default=None,
+                        help="Root folder for images")
+    parser.add_argument("--num-classes", type=int,
+                        deafult=None, help="Number of classes")
     parser.add_argument("--model", type=str, default="digits_cnn", choices=AVAILABLE_MODELS,
                         help="Model to be trained")
     parser.add_argument("--batch-size", type=int, default=32,
@@ -85,6 +93,10 @@ def create_landscape_parser():
 
     parser.add_argument("--dataset", type=str,
                         default="digits", choices=AVAILABLE_DATASETS, help="Dataset to be used")
+    parser.add_argument("--root", type=str, default=None,
+                        help="Root folder for images")
+    parser.add_argument("--num-classes", type=int,
+                        deafult=None, help="Number of classes")
     parser.add_argument("--model", type=str, default="digits_cnn", choices=AVAILABLE_MODELS,
                         help="Model to be trained")
     parser.add_argument("--batch-size", type=int, default=32,
