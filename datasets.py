@@ -141,7 +141,7 @@ def image_folder_dataloader(args):
     if args.root is None:
         assert("No Root Folder specified")
     train_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.RandomResizedCrop((112, 112)),
         torchvision.transforms.RandomHorizontalFlip(),
         torchvision.transforms.RandomRotation(15),
         torchvision.transforms.ToTensor(),
@@ -150,13 +150,13 @@ def image_folder_dataloader(args):
     ])
 
     test_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.RandomResizedCrop((112, 112)),
         torchvision.transforms.ToTensor(),
         torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
                                          0.24703233, 0.24348505, 0.26158768])
     ])
     raw_test_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((224, 224)),
+        torchvision.transforms.RandomResizedCrop((112, 112)),
         torchvision.transforms.ToTensor()
     ])
 
@@ -169,10 +169,11 @@ def image_folder_dataloader(args):
     raw_test_ds = torchvision.datasets.ImageFolder(
         test_path, transform=raw_test_transform)
     train_dl = torch.utils.data.DataLoader(
-        train_ds, batch_size=args.batch_size)
-    test_dl = torch.utils.data.DataLoader(test_ds, batch_size=args.batch_size)
+        train_ds, batch_size=args.batch_size, shuffle=True)
+    test_dl = torch.utils.data.DataLoader(
+        test_ds, batch_size=args.batch_size, shuffle=True)
 
-    extra_info = {"labels": train_ds.classes, "image_shape": (3, 224, 224)}
+    extra_info = {"labels": train_ds.classes, "image_shape": (3, 112, 112)}
     return train_dl, test_dl,  test_ds, raw_test_ds, extra_info
 
 

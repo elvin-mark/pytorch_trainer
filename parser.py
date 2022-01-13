@@ -63,7 +63,7 @@ def create_test_parser():
     parser.add_argument("--root", type=str, default=None,
                         help="Root folder for images")
     parser.add_argument("--num-classes", type=int,
-                        deafult=None, help="Number of classes")
+                        default=None, help="Number of classes")
     parser.add_argument("--model", type=str, default="digits_cnn", choices=AVAILABLE_MODELS,
                         help="Model to be trained")
     parser.add_argument("--batch-size", type=int, default=32,

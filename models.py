@@ -120,17 +120,10 @@ def cifar100_cnn():
 def simple_general_cnn(num_classes):
     return nn.Sequential(
         simple_conv_block(3, 32, 3),
-        nn.MaxPool2d(kernel_size=2),
         simple_conv_block(32, 32, 3),
-        nn.MaxPool2d(kernel_size=2),
         simple_conv_block(32, 64, 3),
-        nn.MaxPool2d(kernel_size=2),
         simple_conv_block(64, 64, 3),
-        nn.MaxPool2d(kernel_size=2),
         simple_conv_block(64, 128, 3),
-        nn.MaxPool2d(kernel_size=2),
-        simple_conv_block(128, 128, 3),
-        nn.AdaptiveAvgPool2d(1),
         nn.Flatten(),
         nn.Linear(128, num_classes)
     )

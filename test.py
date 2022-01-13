@@ -14,11 +14,11 @@ import io
 args = create_test_parser()
 
 if args.gpu and torch.cuda.is_available():
-    print("Using GPU for training")
+    print("Using GPU for testing")
     dev = torch.device("cuda:0")
 else:
     dev = torch.device("cpu")
-    print("Using CPU for training. It can be a little bit slow")
+    print("Using CPU for testing. It can be a little bit slow")
 
 model = create_model(args).to(dev)
 model.load_state_dict(torch.load(args.model_path, map_location=dev))
