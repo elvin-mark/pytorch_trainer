@@ -141,7 +141,7 @@ def image_folder_dataloader(args):
     if args.root is None:
         assert("No Root Folder specified")
     train_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((112, 112)),
+        torchvision.transforms.Resize((112, 112)),
         torchvision.transforms.RandomHorizontalFlip(),
         torchvision.transforms.RandomRotation(15),
         torchvision.transforms.ToTensor(),
@@ -150,13 +150,13 @@ def image_folder_dataloader(args):
     ])
 
     test_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((112, 112)),
+        torchvision.transforms.Resize((112, 112)),
         torchvision.transforms.ToTensor(),
         torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
                                          0.24703233, 0.24348505, 0.26158768])
     ])
     raw_test_transform = torchvision.transforms.Compose([
-        torchvision.transforms.RandomResizedCrop((112, 112)),
+        torchvision.transforms.Resize((112, 112)),
         torchvision.transforms.ToTensor()
     ])
 

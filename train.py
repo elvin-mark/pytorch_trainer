@@ -29,6 +29,13 @@ else:
     print("Using CPU for training. It can be a little bit slow")
 
 model = create_model(args).to(dev)
+
+if args.start_model is not None:
+    try:
+        model.load_state_dict(torch.load(args.start_model, map_location=dev))
+    except:
+        print("Could not load specified model. Using random model")
+
 train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(args)
 optim = create_optim(args, model)
 crit = nn.CrossEntropyLoss()

@@ -46,6 +46,8 @@ def create_train_parser():
                         help="show some sample images in the dashboard", dest="samples")
     parser.add_argument("--url", type=str, default=None,
                         help="Specify a customize URL for the dashboard")
+    parser.add_argument("--start-model", type=str, default=None,
+                        help="Initial checkpoint for training")
 
     parser.set_defaults(gpu=False, logging=True,
                         save_model=False, csv=False, dashboard=False, landscape=False, samples=False)
