@@ -32,9 +32,10 @@ def test_images(model, test_ds, raw_test_ds, labels, image_shape, dev, N=5, top=
     model.eval()
     softmax = nn.Softmax(dim=1)
     samples = []
-    for i, ((x, y), (x_raw, y_raw)) in enumerate(zip(test_ds, raw_test_ds)):
-        if i == N:
-            break
+    random_idxs = np.random.randint(0, len(test_ds), (N,))
+    for i in random_idxs:
+        x, y = test_ds[i]
+        x_raw, y_raw = raw_test_ds[i]
         if image_shape[0] == 3:
             img = np.round(255 * x_raw.detach().clone().numpy().reshape(
                 image_shape).transpose(1, 2, 0)).astype("uint8")
