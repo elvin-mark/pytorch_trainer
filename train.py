@@ -1,4 +1,5 @@
 import io
+from venv import create
 import torch
 import torch.nn as nn
 import pickle
@@ -32,7 +33,11 @@ else:
     dev = torch.device("cpu")
     print("Using CPU for training. It can be a little bit slow")
 
-model = create_model(args).to(dev)
+if args.customize:
+    from customize import create_model_customize
+    model = create_model_customize(args).to(dev)
+else:
+    model = create_model(args).to(dev)
 
 if args.start_model is not None:
     try:
@@ -40,7 +45,14 @@ if args.start_model is not None:
     except:
         print("Could not load specified model. Using random model")
 
-train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(args)
+if args.customize:
+    from customize import create_dataloader_customize
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader_customize(
+        args)
+else:
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(
+        args)
+
 optim = create_optim(args, model)
 crit = nn.CrossEntropyLoss()
 

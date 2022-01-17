@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.nn.modules import padding
+import torchvision
 
 
 def simple_conv_block(in_planes, out_planes, kernel_size, stride=1, padding=0):
@@ -129,6 +130,12 @@ def simple_general_cnn(num_classes):
     )
 
 
+def general_resnet18(num_classes):
+    model = torchvision.models.resnet18(pretrained=True)
+    model.fc = nn.Linear(model.fc.in_features, num_classes)
+    return model
+
+
 def create_model(args):
     if args.model == "digits_cnn":
         return digits_cnn()
@@ -148,5 +155,9 @@ def create_model(args):
         if args.num_classes is None:
             assert("No number of classes specified. Could not create model")
         return simple_general_cnn(args.num_classes)
+    elif args.model == "resnet18":
+        if args.num_classes is None:
+            assert("No number of classes specified. Could not create model")
+        return general_resnet18(args.num_classes)
     else:
         return None

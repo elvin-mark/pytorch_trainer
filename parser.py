@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 AVAILABLE_DATASETS = ["digits", "mnist", "kmnist",
                       "fashion_mnist", "cifar10", "cifar100", "image_folder"]
 AVAILABLE_MODELS = ["digits_cnn", "digits_resnet",
-                    "mnist_cnn", "mnist_resnet", "cifar10_cnn", "cifar10_resnet", "cifar100_cnn", "simple_general_cnn"]
+                    "mnist_cnn", "mnist_resnet", "cifar10_cnn", "cifar10_resnet", "cifar100_cnn", "simple_general_cnn", "resnet18"]
 
 
 def create_train_parser():
@@ -50,9 +50,11 @@ def create_train_parser():
                         help="Initial checkpoint for training")
     parser.add_argument("--save-labels", action="store_true",
                         dest="labels", help="Save the labels to map the classes")
+    parser.add_argument("--customize", action="store_true",
+                        dest="customize", help="Customize models and datasets")
 
     parser.set_defaults(gpu=False, logging=True,
-                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False)
+                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False, customize=False)
 
     args = parser.parse_args()
     return args
@@ -85,6 +87,8 @@ def create_test_parser():
                         help="Visualize training process in a dashboard")
     parser.add_argument("--port", type=int, default=5000,
                         help="Port of the dashboard server")
+    parser.add_argument("--customize", action="store_true",
+                        dest="customize", help="Customize models and datasets")
 
     parser.set_defaults(gpu=False, landscape=False, samples=False)
     args = parser.parse_args()
@@ -116,6 +120,8 @@ def create_landscape_parser():
                         default=[-1, 1], help="y range")
     parser.add_argument("--N", type=int, default=10,
                         help="Number of partitions")
+    parser.add_argument("--customize", action="store_true",
+                        dest="customize", help="Customize models and datasets")
 
     args = parser.parse_args()
     return args

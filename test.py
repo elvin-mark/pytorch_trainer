@@ -20,9 +20,22 @@ else:
     dev = torch.device("cpu")
     print("Using CPU for testing. It can be a little bit slow")
 
-model = create_model(args).to(dev)
+if args.customize:
+    from customize import create_model_customize
+    model = create_model_customize(args).to(dev)
+else:
+    model = create_model(args).to(dev)
+
 model.load_state_dict(torch.load(args.model_path, map_location=dev))
-train_dl, test_dl,  test_ds, raw_test_ds, extra_info = create_dataloader(args)
+
+if args.customize:
+    from customize import create_dataloader_customize
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader_customize(
+        args)
+else:
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(
+        args)
+
 crit = nn.CrossEntropyLoss()
 
 print("Start Testing ...")

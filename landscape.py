@@ -17,10 +17,22 @@ else:
     dev = torch.device("cpu")
     print("Using CPU for training. It can be a little bit slow")
 
-base_model = create_model(args).to(dev)
+if args.customize:
+    from customize import create_model_customize
+    base_model = create_model_customize(args).to(dev)
+else:
+    base_model = create_model(args).to(dev)
+
 base_model.load_state_dict(torch.load(args.base_model, map_location=dev))
 
-_, test_dl, _, _, _ = create_dataloader(args)
+if args.customize:
+    from customize import create_dataloader_customize
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader_customize(
+        args)
+else:
+    train_dl, test_dl, test_ds, raw_test_ds, extra_info = create_dataloader(
+        args)
+
 crit = nn.CrossEntropyLoss()
 
 list_models = [os.path.join(args.checkpoints_dir, elem)
