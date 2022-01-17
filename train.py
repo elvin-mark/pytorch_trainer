@@ -1,6 +1,7 @@
 import io
 import torch
 import torch.nn as nn
+import pickle
 
 from parser import create_train_parser
 from models import create_model
@@ -20,6 +21,9 @@ if not os.path.exists("trained_models"):
 
 if not os.path.exists("checkpoints"):
     os.mkdir("checkpoints")
+
+if not os.path.exists("labels"):
+    os.mkdir("labels")
 
 if args.gpu and torch.cuda.is_available():
     print("Using GPU for training")
@@ -103,3 +107,7 @@ if args.landscape:
 
     if web_logger is not None:
         web_logger.send_landscape(results)
+
+if args.labels:
+    with open("labels/dataset_labels.pkl", "wb") as f:
+        pickle.dump(extra_info["labels"], f)

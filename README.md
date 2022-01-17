@@ -22,8 +22,10 @@ ngrok http PORT
 Run this line to start training
 ```
 python train.py \
-  --dataset {digits,mnist,cifar10,cifar100} \
-  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn} \
+  --dataset {digits,mnist,cifar10,cifar100,image_folder} \
+  --root ROOT \
+  --num-classes NUM_CLASSES \
+  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn, simple_general_cnn} \
   --batch-size BATCH_SIZE \
   --gpu  \      
   --optim OPTIM  \        
@@ -35,9 +37,12 @@ python train.py \
   --csv \     
   --dashboard \       
   --port PORT \
+  --checkpoint CHECKPOINT \
   --url URL \
   --landscape \
-  --samples 
+  --samples \
+  --start-model START_MODEL_PATH \
+  --save-labels
 ```
 
 For more information about this script
@@ -49,13 +54,15 @@ python train.py -h
 Run this line to test a trained model
 ```
 python test.py \
-  --dataset {digits,mnist,cifar10,cifar100} \
-  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn} \
+  --dataset {digits,mnist,cifar10,cifar100,image_folder} \
+  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn,simple_general_cnn} \
+  --root ROOT \
+  --num-classes NUM_CLASSES \
   --batch-size BATCH_SIZE \
   --gpu \ 
   --model-path MODEL_PATH \
   --dashboard \
-  --port PORT
+  --port PORT \
   --url URL\
   --landscape \
   --samples 
@@ -70,8 +77,10 @@ python test.py -h
 Run this line to see the landscape of the loss function for an specific model
 ```
 python landscape.py \
-  --dataset {digits,mnist,cifar10,cifar100} \
-  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn} \
+  --dataset {digits,mnist,cifar10,cifar100,image_folder} \
+  --root ROOT \
+  --num-classes NUM_CLASSES \
+  --model {digits_cnn,mnist_cnn,cifar10_cnn,cifar100_cnn, simple_general_cnn} \
   --batch-size BATCH_SIZE \
   --gpu \
   --base-model BASE_MODEL \

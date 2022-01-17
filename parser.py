@@ -48,9 +48,11 @@ def create_train_parser():
                         help="Specify a customize URL for the dashboard")
     parser.add_argument("--start-model", type=str, default=None,
                         help="Initial checkpoint for training")
+    parser.add_argument("--save-labels", action="store_true",
+                        dest="labels", help="Save the labels to map the classes")
 
     parser.set_defaults(gpu=False, logging=True,
-                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False)
+                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False)
 
     args = parser.parse_args()
     return args
@@ -98,7 +100,7 @@ def create_landscape_parser():
     parser.add_argument("--root", type=str, default=None,
                         help="Root folder for images")
     parser.add_argument("--num-classes", type=int,
-                        deafult=None, help="Number of classes")
+                        default=None, help="Number of classes")
     parser.add_argument("--model", type=str, default="digits_cnn", choices=AVAILABLE_MODELS,
                         help="Model to be trained")
     parser.add_argument("--batch-size", type=int, default=32,
