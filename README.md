@@ -8,7 +8,6 @@ Running the server in case you are using the dashboard
 python server.py
 ```
 In the dashboard you can see the evolution of the training of your network, predictions on some samples images, the loss landscape around the optimal parameters found in the training.
-
 ![dashboard](samples/dashboard.png?raw=true "Dashboard")
 ![samples](samples/samples.png?raw=true "Samples")
 ![landscape](samples/loss_landscape.png?raw=true "Landscape")
@@ -42,7 +41,46 @@ python train.py \
   --landscape \
   --samples \
   --start-model START_MODEL_PATH \
-  --save-labels
+  --save-labels \
+  --customize
+```
+
+#### Examples
+Using an image folder containing all images in the following format. (Internally the [ImageFolder](https://pytorch.org/vision/main/generated/torchvision.datasets.ImageFolder.html) dataset from torchvision is used)
+```
+root/
+  class1/
+    images ...
+  class2/
+    images ...
+  ...
+```
+Example on how to train
+```
+python train.py --dataset image_folder --root PATH_TO_ROOT --model simple_general_cnn --num-classes NUMBER_OF_CLASSES --save-model --epochs 10
+```
+
+Using a customize model and dataloader. Create a customize.py file (using the following template) in the root folder of this repo.
+
+```python
+def create_model_customize(args):
+  # ...
+  # your code
+  return model
+
+def create_dataloader_customize(args):
+  # ...
+  # your code
+  # train_dl: Train dataloader
+  # test_dl: Test dataloader
+  # test_ds: Test dataset
+  # raw_test_ds: Raw test dataset (without any transformation, used for the samples)
+  # extra_info: dictonary of extra information ({"image_shape: (3,112,112), "labels": ["LABEL1","LABEL2",...]})
+  return train_dl, test_dl, test_ds, raw_test_ds, extra_info
+```
+Example on how to train
+```
+python train.py --customize --epochs 10 --save-model
 ```
 
 For more information about this script
@@ -65,7 +103,8 @@ python test.py \
   --port PORT \
   --url URL\
   --landscape \
-  --samples 
+  --samples \
+  --customize
 ```
 
 Run this line for more information 
@@ -87,7 +126,8 @@ python landscape.py \
   --checkpoints-dir CHECKPOINTS_DIR \
   --xrange XRANGE [XRANGE ...] \
   --yrange YRANGE [YRANGE ...] \
-  --N N 
+  --N N \
+  --customize
 ```
 
 Run this line to see more information about this script
