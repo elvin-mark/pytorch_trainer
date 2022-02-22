@@ -42,7 +42,10 @@ python train.py \
   --samples \
   --start-model START_MODEL_PATH \
   --save-labels \
-  --customize
+  --customize \
+  --sched {none,step} \
+  --step-size 10 \
+  --gamma 0.1
 ```
 
 #### Examples
