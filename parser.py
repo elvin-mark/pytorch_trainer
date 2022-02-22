@@ -52,6 +52,12 @@ def create_train_parser():
                         dest="labels", help="Save the labels to map the classes")
     parser.add_argument("--customize", action="store_true",
                         dest="customize", help="Customize models and datasets")
+    parser.add_argument("--sched", type=str, default="none",
+                        choices=["none", "step"], help="Schedule for learning rate")
+    parser.add_argument("--step-size", type=int, default=5,
+                        help="Step size for learning rate")
+    parser.add_argument("--gamma", type=float, default=0.1,
+                        help="Gamma for learning rate")
 
     parser.set_defaults(gpu=False, logging=True,
                         save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False, customize=False)

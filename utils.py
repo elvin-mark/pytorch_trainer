@@ -9,6 +9,7 @@ import numpy as np
 import io
 from PIL import Image
 import base64
+import tqdm
 
 
 class WebLogger:
@@ -101,16 +102,18 @@ def train_one_step(model, train_dl, crit, optim, dev):
     return train_loss, train_acc.item()
 
 
-def train(model, train_dl, test_dl, crit, optim, epochs, dev, logging=True, csv=False, dashboard=False, web_logger=None, checkpoint=0):
+def train(model, train_dl, test_dl, crit, optim, epochs, dev, lr_sched=None, logging=True, csv=False, dashboard=False, web_logger=None, checkpoint=0):
     data_ = []
     columns = ["epoch", "lr", "train_loss",
                "train_acc", "test_loss", "test_acc"]
 
-    for epoch in range(epochs):
+    for epoch in tqdm.tqdm(range(epochs)):
         lr = optim.param_groups[0]["lr"]
         train_loss, train_acc = train_one_step(
             model, train_dl, crit, optim, dev)
         test_loss, test_acc = evaluate(model, test_dl, crit, dev)
+        if lr_sched:
+            lr_sched.step()
         if logging:
             print(
                 f"epoch: {epoch}, train_loss: {train_loss}, train_acc: {train_acc:.2f}%, test_loss: {test_loss}, test_acc: {test_acc:.2f}%")

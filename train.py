@@ -8,6 +8,7 @@ from parser import create_train_parser
 from models import create_model
 from datasets import create_dataloader
 from optim import create_optim
+from scheduler import create_lr_scheduler
 from utils import train, WebLogger, test_images, landscape
 
 import matplotlib.pyplot as plt
@@ -54,6 +55,7 @@ else:
         args)
 
 optim = create_optim(args, model)
+lr_sched = create_lr_scheduler(args, optim)
 crit = nn.CrossEntropyLoss()
 
 web_logger = None
@@ -63,7 +65,7 @@ if args.dashboard:
 
 print("Start Training ...")
 hist = train(model, train_dl, test_dl, crit, optim,
-             args.epochs, dev, logging=args.logging, csv=args.csv, dashboard=args.dashboard, web_logger=web_logger, checkpoint=args.checkpoint)
+             args.epochs, dev, lr_sched=lr_sched, logging=args.logging, csv=args.csv, dashboard=args.dashboard, web_logger=web_logger, checkpoint=args.checkpoint)
 
 if args.csv and hist is not None:
     print("Saving CSV Record")
