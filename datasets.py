@@ -186,6 +186,8 @@ def image_folder_dataloader(args):
         test_ds = MyDataset(test_ds_, transform=test_transform)
         raw_test_ds = MyDataset(test_ds_, transform=raw_test_transform)
 
+        classes = raw_dataset.classes
+
     else:
         train_path = os.path.join(args.root, "train")
         test_path = os.path.join(args.root, "test")
@@ -197,12 +199,14 @@ def image_folder_dataloader(args):
         raw_test_ds = torchvision.datasets.ImageFolder(
             test_path, transform=raw_test_transform)
 
+        classes = train_ds.classes
+
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size, shuffle=True)
     test_dl = torch.utils.data.DataLoader(
         test_ds, batch_size=args.batch_size, shuffle=True)
 
-    extra_info = {"labels": train_ds.classes, "image_shape": (3, 112, 112)}
+    extra_info = {"labels": classes, "image_shape": (3, 112, 112)}
 
     return train_dl, test_dl,  test_ds, raw_test_ds, extra_info
 
