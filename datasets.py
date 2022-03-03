@@ -137,6 +137,21 @@ def cifar100_dataloader(args):
     return train_dl, test_dl,  test_ds, raw_test_ds, EXTRA_INFO_CIFAR100
 
 
+class MyDataset(torch.utils.data.Dataset):
+    def __init__(self, org_ds, transform=None):
+        self.org_ds = org_ds
+        self.transform = transform
+
+    def __getitem__(self, idx):
+        x, y = self.org_ds[idx]
+        if self.transform is not None:
+            x = self.transform(x)
+        return x, y
+
+    def __len__(self):
+        return len(self.org_ds)
+
+
 def image_folder_dataloader(args):
     if args.root is None:
         assert("No Root Folder specified")
@@ -159,21 +174,36 @@ def image_folder_dataloader(args):
         torchvision.transforms.Resize((112, 112)),
         torchvision.transforms.ToTensor()
     ])
+    if args.split_dataset:
+        raw_dataset = torchvision.datasets.ImageFolder(args.root)
+        N = len(raw_dataset)
+        train_size_ = int(args.train_size * N)
+        test_size_ = N - train_size_
+        train_ds_, test_ds_ = torch.utils.data.random_split(
+            raw_dataset, [train_size_, test_size_])
 
-    train_path = os.path.join(args.root, "train")
-    test_path = os.path.join(args.root, "test")
-    train_ds = torchvision.datasets.ImageFolder(
-        train_path, transform=train_transform)
-    test_ds = torchvision.datasets.ImageFolder(
-        test_path, transform=test_transform)
-    raw_test_ds = torchvision.datasets.ImageFolder(
-        test_path, transform=raw_test_transform)
+        train_ds = MyDataset(train_ds_, transform=train_transform)
+        test_ds = MyDataset(test_ds_, transform=test_transform)
+        raw_test_ds = MyDataset(test_ds_, transform=raw_test_transform)
+
+    else:
+        train_path = os.path.join(args.root, "train")
+        test_path = os.path.join(args.root, "test")
+
+        train_ds = torchvision.datasets.ImageFolder(
+            train_path, transform=train_transform)
+        test_ds = torchvision.datasets.ImageFolder(
+            test_path, transform=test_transform)
+        raw_test_ds = torchvision.datasets.ImageFolder(
+            test_path, transform=raw_test_transform)
+
     train_dl = torch.utils.data.DataLoader(
         train_ds, batch_size=args.batch_size, shuffle=True)
     test_dl = torch.utils.data.DataLoader(
         test_ds, batch_size=args.batch_size, shuffle=True)
 
     extra_info = {"labels": train_ds.classes, "image_shape": (3, 112, 112)}
+
     return train_dl, test_dl,  test_ds, raw_test_ds, extra_info
 
 

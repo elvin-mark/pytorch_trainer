@@ -71,7 +71,8 @@ def evaluate(model, test_dl, crit, dev):
     for x, y in test_dl:
         x = x.to(dev)
         y = y.to(dev)
-        o = model(x)
+        with torch.no_grad():
+            o = model(x)
         l = crit(o, y)
         corrects += torch.sum(torch.argmax(o, axis=1) == y)
         total += len(y)

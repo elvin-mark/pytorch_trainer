@@ -58,6 +58,10 @@ def create_train_parser():
                         help="Step size for learning rate")
     parser.add_argument("--gamma", type=float, default=0.1,
                         help="Gamma for learning rate")
+    parser.add_argument("--split-dataset", action="store_true",
+                        dest="split_dataset", help="split the images in the root folder into train and test datset")
+    parser.add_argument("--train-size", type=float, default=0.8,
+                        help="train size scale when splitting the dataset into train and test dataset")
 
     parser.set_defaults(gpu=False, logging=True,
                         save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False, customize=False)
