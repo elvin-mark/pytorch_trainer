@@ -99,8 +99,13 @@ def create_test_parser():
                         help="Port of the dashboard server")
     parser.add_argument("--customize", action="store_true",
                         dest="customize", help="Customize models and datasets")
+    parser.add_argument("--split-dataset", action="store_true",
+                        dest="split_dataset", help="split the images in the root folder into train and test datset")
+    parser.add_argument("--train-size", type=float, default=0.8,
+                        help="train size scale when splitting the dataset into train and test dataset")
 
-    parser.set_defaults(gpu=False, landscape=False, samples=False)
+    parser.set_defaults(gpu=False, dashboard=False,  landscape=False,
+                        samples=False, customize=False, split_dataset=False)
     args = parser.parse_args()
     return args
 
@@ -132,6 +137,12 @@ def create_landscape_parser():
                         help="Number of partitions")
     parser.add_argument("--customize", action="store_true",
                         dest="customize", help="Customize models and datasets")
+    parser.add_argument("--split-dataset", action="store_true",
+                        dest="split_dataset", help="split the images in the root folder into train and test datset")
+    parser.add_argument("--train-size", type=float, default=0.8,
+                        help="train size scale when splitting the dataset into train and test dataset")
+
+    parser.set_defaults(gpu=False, customize=False, split_dataset=False)
 
     args = parser.parse_args()
     return args
