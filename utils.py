@@ -167,10 +167,12 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
         for k in tmp:
             if "running" in k or "num_batches_tracked" in k:
                 continue
-            acc_proj1 += w1[i].dot(tmp[k].reshape(-1) - base_parameters[i])
-            acc_norm1 += w1[i].dot(w1[i])
-            acc_proj2 += w2[i].dot(tmp[k].reshape(-1) - base_parameters[i])
-            acc_norm2 += w2[i].dot(w2[i])
+            acc_proj1 += w1[i].dot(tmp[k].reshape(-1) -
+                                   base_parameters[i]).item()
+            acc_norm1 += w1[i].dot(w1[i]).item()
+            acc_proj2 += w2[i].dot(tmp[k].reshape(-1) -
+                                   base_parameters[i]).item()
+            acc_norm2 += w2[i].dot(w2[i]).item()
             i += 1
         proj_checkpoints.append(
             [acc_proj1 / acc_norm1 ** 0.5, acc_proj2 / acc_norm2 ** 0.5])
