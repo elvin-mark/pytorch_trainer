@@ -10,6 +10,8 @@ import io
 from PIL import Image
 import base64
 import tqdm
+import matplotlib.pyplot as plt
+import networkx as nx
 
 
 class WebLogger:
@@ -194,3 +196,105 @@ def landscape(base_model, list_models, test_dl, crit, xrange, yrange, N, dev):
 
     Z = np.array(Z).reshape(X.shape)
     return X, Y, Z, proj_checkpoints
+
+
+def get_model_graph(model, dummy, dev):
+    """
+    Function that returns a graph of the operations done in a neural network model.
+    """
+    nodes_dict = {}
+    layers_dict = {}
+
+    class MyTuple(tuple):
+        """
+        Tuple class for registiring sum between tensors during forward operation.
+        """
+        sum_idx = 0
+
+        def __init__(self, x):
+            self.raw = x
+
+        def __add__(self, y):
+            i, x_ = self.raw
+            j, y_ = y.raw
+            MyTuple.sum_idx += 1
+            sum_node = f'sum_{MyTuple.sum_idx}'
+            nodes_dict[sum_node] = {"from": [i, j]}
+
+            return (sum_node, x_+y_)
+
+    def prehook_fn(self, input):
+        """
+        Preforward hook: register the connection between the previous layer and the current layer
+        """
+        tmp = str(id(self))
+        if tmp not in nodes_dict:
+            nodes_dict[tmp] = {"from": []}
+        if tmp not in layers_dict:
+            layers_dict[tmp] = str(type(self)).split(".")[-1][:-2]
+        ind, input_ = input[0]
+        nodes_dict[tmp]["from"].append(ind)
+        return input_
+
+    def hook_fn(self, input, output):
+        """
+        Forward hook: returns a tuple with the id of the current layer and the output of the current layer
+        """
+        tmp = str(id(self))
+        return MyTuple((tmp, output))
+
+    def register_hooks(model):
+        """
+        Register recursively to all layers the forward hook
+        """
+        if "torch" not in str(type(model)) or "Sequential" in str(type(model)):
+            for child in model.children():
+                register_hooks(child)
+
+        else:
+            model.register_forward_hook(hook_fn)
+
+    def register_pre_hooks(model):
+        """
+        Register recursively to all layers the pre forward hook
+        """
+        if "torch" not in str(type(model)) or "Sequential" in str(type(model)):
+            for child in model.children():
+                register_pre_hooks(child)
+
+        else:
+            model.register_forward_pre_hook(prehook_fn)
+
+    register_hooks(model)
+    register_pre_hooks(model)
+
+    # Forward the dummy variable
+    model(("init", dummy.to(dev)))
+
+    layers_dict["init"] = "init"
+
+    for i in range(1, MyTuple.sum_idx+1):
+        layers_dict[f"sum_{i}"] = f"sum_{i}"
+
+    return nodes_dict, layers_dict
+
+
+def draw_graph(nodes_dict, layers_dict):
+    edges = []
+
+    for k, v in nodes_dict.items():
+        for t in v["from"]:
+            edges.append([t, k])
+
+    g = nx.Graph()
+    g.add_edges_from(edges)
+    nx.draw_networkx(g, labels=layers_dict)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    img_bytes = buf.read()
+    img = "data:image/png;base64, " + \
+        base64.b64encode(img_bytes).decode()
+
+    return img
