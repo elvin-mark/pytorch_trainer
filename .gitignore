@@ -3,3 +3,4 @@ checkpoints/
 trained_models/
 labels/
 customize.py
+data/
