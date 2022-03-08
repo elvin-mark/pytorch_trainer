@@ -4,7 +4,7 @@ import torch.nn as nn
 from parser import create_test_parser
 from models import create_model
 from datasets import create_dataloader
-from utils import evaluate, WebLogger, test_images, landscape
+from utils import evaluate, WebLogger, test_images, landscape, draw_graph, get_model_graph
 import os
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -98,3 +98,12 @@ if args.landscape:
 
     if web_logger is not None:
         web_logger.send_landscape(results)
+
+if web_logger is not None:
+    try:
+        model_graph = draw_graph(*get_model_graph(
+            model, torch.zeros((1, *extra_info["image_shape"])), dev))
+        results = {"graph": model_graph}
+        web_logger.send_model(results)
+    except:
+        print("Could not generate the model graph!")
