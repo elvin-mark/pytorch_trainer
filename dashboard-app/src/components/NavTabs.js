@@ -19,6 +19,7 @@ function NavTabs() {
           to="/Landscape"
           component={Link}
         ></Tab>
+        <Tab label="Model" value="/model" to="/model" component={Link}></Tab>
       </Tabs>
     </div>
   );

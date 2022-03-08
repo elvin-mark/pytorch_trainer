@@ -12,11 +12,12 @@ Run the server script in case you want to use the dashboard. This will create a 
 python server.py
 ```
 
-In the dashboard you can see the evolution of the training of your network model, predictions on some samples images, the loss landscape around the optimal parameters found in the training.
+In the dashboard you can see the evolution of the training of your network model, predictions on some samples images, the loss landscape around the optimal parameters found in the training and an sketch of the model you have used!.
 ![dashboard](samples/dashboard.png?raw=true "Dashboard")
 ![samples](samples/samples.png?raw=true "Samples")
 ![landscape](samples/loss_landscape.png?raw=true "Landscape")
 ![contour](samples/contour.png?raw=true "Contour")
+![modelgraph](samples/model_graph.png?raw=true "Model Graph")
 
 You can also use the following command line using ngrok if you want your dashboard to be available outside your local network. (If you want to use it from google colab for example)
 

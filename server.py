@@ -47,5 +47,14 @@ def handle_landscape():
     return "received!"
 
 
+@app.route("/send_model", methods=["POST"])
+def handle_model():
+    if request.method == "POST":
+        data = request.get_json()
+        with app.test_request_context("/"):
+            emit("model", data, namespace="/", room=sid)
+    return "received!"
+
+
 if __name__ == "__main__":
     socketio.run(app)

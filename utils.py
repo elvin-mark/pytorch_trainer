@@ -30,6 +30,9 @@ class WebLogger:
     def send_landscape(self, data):
         requests.post(self.base_url + "send_landscape", json=data)
 
+    def send_model(self, data):
+        requests.post(self.base_url + "send_model", json=data)
+
 
 def test_images(model, test_ds, raw_test_ds, labels, image_shape, dev, N=5, top=5):
     model.eval()
