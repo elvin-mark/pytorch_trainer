@@ -282,6 +282,22 @@ def get_model_graph(model, dummy, dev):
     return nodes_dict, layers_dict
 
 
+def get_graph_structure(nodes_dict, layers_dict):
+    result = {}
+    nodes_id = {k: i+1 for i, k in enumerate(nodes_dict)}
+    nodes_id["init"] = 0
+    result["nodes"] = []
+    result["edges"] = []
+    result["nodes"].append({"id": 0, "label": "init", "title": "init"})
+    for k, v in nodes_dict.items():
+        result["nodes"].append(
+            {"id": nodes_id[k], "label": layers_dict[k], "title": "layer"})
+        for elem in v["from"]:
+            result["edges"].append(
+                {"from": nodes_id[elem], "to": nodes_id[k]})
+    return result
+
+
 def draw_graph(nodes_dict, layers_dict):
     edges = []
 

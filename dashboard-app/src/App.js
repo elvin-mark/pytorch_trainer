@@ -57,10 +57,7 @@ function App() {
                 ></Landscape>
               }
             ></Route>
-            <Route
-              path="/model"
-              element={<Model graph={model.graph}></Model>}
-            ></Route>
+            <Route path="/model" element={<Model {...model}></Model>}></Route>
           </Routes>
         </Box>
       </MemoryRouter>
