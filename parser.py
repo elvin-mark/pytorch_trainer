@@ -62,9 +62,11 @@ def create_train_parser():
                         dest="split_dataset", help="split the images in the root folder into train and test datset")
     parser.add_argument("--train-size", type=float, default=0.8,
                         help="train size scale when splitting the dataset into train and test dataset")
+    parser.add_argument("--playground", action="store_true",
+                        dest="playground", help="specified wether to use playground or not")
 
     parser.set_defaults(gpu=False, logging=True,
-                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False, customize=False, split_dataset=False)
+                        save_model=False, csv=False, dashboard=False, landscape=False, samples=False, labels=False, customize=False, split_dataset=False, playground=False)
 
     args = parser.parse_args()
     return args
@@ -103,9 +105,11 @@ def create_test_parser():
                         dest="split_dataset", help="split the images in the root folder into train and test datset")
     parser.add_argument("--train-size", type=float, default=0.8,
                         help="train size scale when splitting the dataset into train and test dataset")
+    parser.add_argument("--playground", action="store_true",
+                        dest="playground", help="specified wether to use playground or not")
 
     parser.set_defaults(gpu=False, dashboard=False,  landscape=False,
-                        samples=False, customize=False, split_dataset=False)
+                        samples=False, customize=False, split_dataset=False, playground=False)
     args = parser.parse_args()
     return args
 

@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import base64
 import io
+import pickle
 
 args = create_test_parser()
 
@@ -59,6 +60,14 @@ if args.samples:
         model, test_ds, raw_test_ds, extra_info["labels"], extra_info["image_shape"], dev)
     if web_logger is not None:
         web_logger.send_samples(results)
+
+if args.playground:
+    print("Generating temporal files for playground")
+    if not os.path.exists("tmp"):
+        os.mkdir("tmp")
+    torch.save(model, f"tmp/tmp_model.ckpt")
+    with open("tmp/tmp_extra_info.pkl", "wb") as f:
+        pickle.dump(extra_info, f)
 
 if args.landscape:
     print("Generating Landscape")

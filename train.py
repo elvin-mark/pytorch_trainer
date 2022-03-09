@@ -82,6 +82,13 @@ if args.samples:
     if web_logger is not None:
         web_logger.send_samples(results)
 
+if args.playground:
+    if not os.path.exists("tmp"):
+        os.mkdir("tmp")
+    torch.save(model, f"tmp/tmp_model.ckpt")
+    with open("tmp/tmp_extra_info.pkl", "wb") as f:
+        pickle.dump(extra_info, f)
+
 if args.landscape:
     print("Generating Landscape")
     list_models = [os.path.join("./checkpoints", elem)

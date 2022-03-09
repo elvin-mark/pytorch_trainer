@@ -10,6 +10,8 @@ import { Box } from "@mui/material";
 import { MemoryRouter } from "react-router-dom";
 import Landscape from "./components/Landscape";
 import Model from "./components/Model";
+import Playground from "./components/Playground";
+import axios from "axios";
 
 function App() {
   const socket = io("/");
@@ -17,6 +19,7 @@ function App() {
   const [samples, setSamples] = useState({ samples: [] });
   const [landscape, setLandscape] = useState({ img: null });
   const [model, setModel] = useState({ graph: null });
+  const [response, setResponse] = useState({ categories: [], prob: [] });
 
   socket.on("data", (new_data) => {
     setData([...data, new_data]);
@@ -34,6 +37,17 @@ function App() {
     setModel(new_data);
   });
 
+  const submitSample = (imgSrc) => {
+    console.log(imgSrc);
+    axios
+      .post("/playground_sample", { data: imgSrc })
+      .then((res) => {
+        setResponse(res.data);
+      })
+      .catch((e) => {
+        console.log("Error!");
+      });
+  };
   return (
     <div className="App">
       <MemoryRouter initialEntries={["/"]} initialIndex={0}>
@@ -58,6 +72,15 @@ function App() {
               }
             ></Route>
             <Route path="/model" element={<Model {...model}></Model>}></Route>
+            <Route
+              path="/playground"
+              element={
+                <Playground
+                  onSubmitSample={submitSample}
+                  response={response}
+                ></Playground>
+              }
+            ></Route>
           </Routes>
         </Box>
       </MemoryRouter>

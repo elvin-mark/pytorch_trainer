@@ -20,6 +20,12 @@ function NavTabs() {
           component={Link}
         ></Tab>
         <Tab label="Model" value="/model" to="/model" component={Link}></Tab>
+        <Tab
+          label="Playground"
+          value="/playground"
+          to="/playground"
+          component={Link}
+        ></Tab>
       </Tabs>
     </div>
   );
