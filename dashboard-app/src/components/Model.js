@@ -4,7 +4,7 @@ function Model({ graph_img, graph_struct }) {
   const options = {
     layout: {
       improvedLayout: true,
-      clusterThreshold: true,
+      clusterThreshold: 100,
     },
     edges: {
       color: "#000000",
