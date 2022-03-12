@@ -7,6 +7,7 @@ import pickle
 import PIL
 import base64
 import io
+from argparse import ArgumentParser
 
 app = Flask(__name__)
 app.config["SECTRET_KEY"] = "dashboard_secret"
@@ -21,7 +22,10 @@ def get_image_tensor(img_src, extra_info):
     N, H, W = extra_info
     transf_img = torchvision.transforms.Compose([
         torchvision.transforms.Resize((H, W)),
-        torchvision.transforms.ToTensor()])
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.49139968, 0.48215827, 0.44653124], [
+                                         0.24703233, 0.24348505, 0.26158768])
+    ])
 
     img_src = img_src.split(",")[1]
     img_bytes = io.BytesIO(base64.b64decode(img_src))
@@ -102,4 +106,8 @@ def handle_playground_sample():
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    parser = ArgumentParser(description="Server for dashboard")
+    parser.add_argument("--port", type=int, default=12345,
+                        help="specify the port number to run the server locally")
+    args = parser.parse_args()
+    socketio.run(app, port=args.port)
